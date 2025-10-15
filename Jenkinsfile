@@ -15,6 +15,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
+                error('Simulated test failure!')
             }
         }
         stage('Deploy') {
@@ -24,3 +25,4 @@ pipeline {
         }
     }
 }
+
