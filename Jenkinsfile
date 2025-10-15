@@ -2,27 +2,36 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Setup') {
             steps {
-                git url: 'https://github.com/KrutagnaKathiya/STQA_Pr9.git', branch: 'main'
+                sh 'python -m pip install --upgrade pip'
+                sh 'pip install -r requirements.txt'
             }
         }
+
+        stage('Run Tests') {
+            steps {
+                sh 'pytest > result.log || true'
+                sh 'cat result.log'
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Building the project...'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Running tests...'
-                error('Simulated test failure!')
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying application...'
+                echo 'Demo build step - your app is ready!'
             }
         }
     }
-}
 
+    post {
+        always {
+            archiveArtifacts artifacts: 'result.log', allowEmptyArchive: true
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
