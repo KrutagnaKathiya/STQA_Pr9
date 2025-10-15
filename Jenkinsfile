@@ -4,21 +4,23 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                sh 'python -m pip install --upgrade pip'
-                sh 'pip install -r requirements.txt'
+                // Upgrade pip and install requirements
+                bat 'python -m pip install --upgrade pip'
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'pytest > result.log || true'
-                sh 'cat result.log'
+                // Run pytest, continue even if some tests fail
+                bat 'pytest > result.log || exit 0'
+                bat 'type result.log'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Demo build step - your app is ready!'
+                echo 'Build step completed - app is ready!'
             }
         }
     }
